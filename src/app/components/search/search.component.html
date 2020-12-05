@@ -7,7 +7,7 @@
       </div>
       <div class="form-check form-check-inline">
         Sort By:
-        <input class="form-check-input ml-2" type="radio" formControlName="sortby" value="top" checked>
+        <input class="form-check-input ml-2" type="radio" formControlName="sortby" value="top" ng-checked="true">
         <label class="form-check-label">
           Top
         </label>
@@ -34,8 +34,33 @@
           <option value="100">100</option>
         </select>
       </div>
-      <button type="submit" class="btn btn-dark btn-block mt-4" (click)="onCreateOffer()">Search</button>
+      <button type="submit" class="btn btn-dark btn-block mt-4" (click)="onSubmit()">Search</button>
     </form>
   </div>
-  
+  <div id="results" *ngIf="this.posts.length>0">
+    <div class='card-columns'>
+      <div class="card"  *ngFor="let post of posts">
+        <a [href]="post.media" target="_blank">
+            <img [src]="post.preview" class="card-img-top" alt="...">
+        </a>
+        <div class="card-body">
+            <h5 class="card-title">{{post.title}}</h5>
+            <p class="card-text">{{post.selftext}}</p>
+            <a [href]="post.postlink" target="_blank" class="btn btn-primary">Read more</a>
+            <div style="
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            margin-top:9px">
+                <div>
+                    <a [href]="post.subredditlink" target="_blank" class="text-secondary" style="display:block">Subreddit: {{post.subreddit}}</a>
+                </div>
+                <div>
+                    <a class="text-secondary">Score: {{post.score}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  </div>
 </div>

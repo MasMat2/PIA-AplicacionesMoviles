@@ -1,11 +1,13 @@
 export class Post{
     constructor(
-      title: string,
-      subreddit: string,
-      premalink: string,
-      text: string,
-      score: number,
-      preview: string,
-      media: string
+      public title: string,
+      public subreddit: string,
+      public selftext: string,
+      public score: number,
+      public preview: string,
+      public media: string,
+      public subredditlink: string,
+      public permalink: string,
+      public postlink: string
     ) {}
   }

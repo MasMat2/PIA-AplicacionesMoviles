@@ -1,16 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,  OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { RedditAPIService } from './../../services/reddit-api.service';
 import { Post } from './../../services/post.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, OnDestroy {
   form: FormGroup;
   posts: Post[];
+  private postsSub: Subscription;
+  isLoading = false;
 
   constructor(private formBuilder: FormBuilder, private redditAPI: RedditAPIService) { 
     this.form = this.formBuilder.group({
@@ -21,14 +24,26 @@ export class SearchComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.postsSub = this.redditAPI.posts.subscribe(posts => {
+      this.posts = posts;
+    });
   }
   
-  onCreateOffer(){
+  onSubmit(){
     if(!this.form.valid){
       return;
     }
 
-    this.posts = [this.redditAPI.get_posts(this.form.value.query, this.form.value.limit, this.form.value.sortby)];
+    this.redditAPI.get_posts(this.form.value.query, this.form.value.limit, this.form.value.sortby).subscribe(() => {
+        this.isLoading = true;
+        console.log(this.posts);
+    });
   }
-  
+
+  ngOnDestroy(){
+    if(this.postsSub){
+      this.postsSub.unsubscribe();
+    }
+
+  }
 }
